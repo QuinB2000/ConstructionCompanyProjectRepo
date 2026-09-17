@@ -7,9 +7,88 @@
     <header>
         <h1>Please Select Action</h1>
     </header>
-    <a href="NewEntry.html"><h2>New Entry</h2></a>
-    <!--<h2>Edit Existing Entry</h2>
-    <h2>Delete Existing Entry</h2>-->
-    <a href="ViewEntries.html"><h2>View All Entries</h2></a>
+
+    <a href="EntryList.php"><h2>View entries</h2></a>
+    <a href="AssignmentList.php"><h2>View Assignments</h2></a>
+    
+    
+    <button command="show-modal" commandfor="TruckDialog">Add Truck</button>
+
+    <dialog id="TruckDialog">
+    <form action="TruckEntry.php" method="post">
+        <label for="truckID">Truck ID:</label>
+        <input type="number" id="truckID" name="truckID"><br><br>
+        <label for="truckCapacity">Truck Capacity:</label>
+        <input type="number" id="truckCapacity" name="truckCapacity"><br><br>
+        <label for="LicenseNum">License Number:</label>
+        <input type="text" id="LicenseNum" name="LicenseNum"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <button commandfor="TruckDialog" command="close">Close</button>
+    </dialog>
+
+    <button command="show-modal" commandfor="EmployeeDialog">Add Employee</button>
+
+    <dialog id="EmployeeDialog">
+    <form action="EmployeeEntry.php" method="post">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required><br><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required><br><br>
+        <label for="isSupervisor">Supervisor:</label>
+        <input type="checkbox" id="isSupervisor" name="isSupervisor"><br><br>
+        <label for="address1">Address 1:</label>
+        <input type="text" id="address1" name="address1" required><br><br>
+        <label for="address2">Address 2:</label>
+        <input type="text" id="address2" name="address2"><br><br>
+        <label for="suiteNum">Suite Number:</label>
+        <input type="text" id="suiteNum" name="suiteNum"><br><br>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required><br><br>
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" required><br><br>
+        <label for="zipCode">Zip Code:</label>
+        <input type="text" id="zipCode" name="zipCode" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <button commandfor="EmployeeDialog" command="close">Close</button>
+    </dialog>
+
+    <button command="show-modal" commandfor="JobDialog">Add Job</button>
+
+    <dialog id="JobDialog">
+    <form action="JobEntry.php" method="post">
+        <label for="address1">Address 1:</label>
+        <input type="text" id="address1" name="address1" required><br><br>
+        <label for="address2">Address 2:</label>
+        <input type="text" id="address2" name="address2"><br><br>
+        <label for="suiteNum">Suite Number:</label>
+        <input type="text" id="suiteNum" name="suiteNum"><br><br>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required><br><br>
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" required><br><br>
+        <label for="zipCode">Zip Code:</label>
+        <input type="text" id="zipCode" name="zipCode" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <button commandfor="JobDialog" command="close">Close</button>
+    </dialog>
+
+    <button command="show-modal" commandfor="MaterialDialog">Add Material</button>
+
+    <dialog id="MaterialDialog">
+    <form action="MaterialEntry.php" method="post">
+        <label for="units">Unit of measurement:</label>
+        <input type="text" id="units" name="units" required><br><br>
+        <label for=""quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required><br><br>
+        <label for="material">Material:</label>
+        <input type="text" id="material" name="material" required><br><br>
+    </form>
+    <button commandfor="MaterialDialog" command="close">Close</button>
+    </dialog>
+
+
 </body>
 </html>

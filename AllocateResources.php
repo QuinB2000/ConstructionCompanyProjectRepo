@@ -22,18 +22,25 @@ if (isset($conn) && $conn instanceof mysqli) {
         }
     }
 
-    $escape = static function ($value) {
+    $escape = static function ($value) 
+    {
         return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
     };
-    $ids = static function ($items) {
+
+    $ids = static function ($items) 
+    {
         return implode(' ', array_column($items, 'id'));
     };
-    $names = static function ($items, $separator) use ($escape) {
+
+    $names = static function ($items, $separator) use ($escape) 
+    {
         return implode($separator, array_map(static function ($item) use ($escape) {
             return $escape($item['name']);
         }, $items));
     };
-    $maxID = static function ($items) {
+
+    $maxID = static function ($items) 
+    {
         return empty($items) ? 0 : max(array_column($items, 'id')) + 1;
     };
 
@@ -49,7 +56,7 @@ if (isset($conn) && $conn instanceof mysqli) {
 
 
 
-
+// add something that counts the number of trucks, employees, and materials for use in the javascript as peoplenum, materialnum, and trucknum. This will be used to create the correct number of dropdowns for each resource type.
 
 
 <script>

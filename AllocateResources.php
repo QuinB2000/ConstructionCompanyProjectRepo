@@ -50,10 +50,20 @@ if (isset($conn) && $conn instanceof mysqli) {
     echo '<div id="AvailableTruckIDs" hidden>' . $maxID($data['trucks']) . ' ' . $maxID($data['employees']) . ' ' . $maxID($data['materials']) . '</div>';
     echo '<div id="AvailableEmployeeNames" hidden>' . $names($data['employees'], ',') . '</div>';
     echo '<div id="AvailableMaterialNames" hidden>' . $names($data['materials'], ' ') . '</div>';
+
+    echo '<input type="hidden" id="peopleNum" name="peopleNum" value="' . count($data['employees']) . '">';
+    echo '<input type="hidden" id="materialNum" name="materialNum" value="' . count($data['materials']) . '">';
+    echo '<input type="hidden" id="truckNum" name="truckNum" value="' . count($data['trucks']) . '">';
 }
 ?>
 
-
+        
+<div id="truckSection">
+</div>
+<div id="peopleSection">
+</div>
+<div id="materialSection">
+</div>
 
 
 // add something that counts the number of trucks, employees, and materials for use in the javascript as peoplenum, materialnum, and trucknum. This will be used to create the correct number of dropdowns for each resource type.
@@ -285,23 +295,7 @@ function truckQuantityChange() {
     populateAllTruckOptions()
 }
 
-function peopleQuantityChange()
-{
-    var peopleNum = document.getElementById("peopleNum");
-    let html = "";
-    for (var i = 0; i < peopleNum; i++)
-    {
-        html = html + " hello ";
-        
-    }
 
-    document.getElementById("peopleSection").innerHTML = html;
-}
-function materialQuantityChange()
-{
-    var materialNum = document.getElementById("materialNum");
-
-}
 
     
 
@@ -398,11 +392,11 @@ function materialQuantityChange()
 
         for (var i = 0; i < peopleNum; i++)
         {
-            html = html + "<label for='employee" + i + "'>";
+            html = html + "<label for='people" + i + "'>";
             html = html + "Choose an employee</label>";
 
-            html = html + "<select id='employee" + i;
-            html = html + "' name='employee" + i;
+            html = html + "<select id='people" + i;
+            html = html + "' name='people" + i;
             html = html + "' onchange=employeeChange(" + i + ")>";
 
             html = html + "<option value='' disabled selected hidden>";
@@ -532,4 +526,4 @@ function materialQuantityChange()
 
 
 
-</script> 
+</script>

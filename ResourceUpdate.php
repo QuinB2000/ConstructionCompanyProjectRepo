@@ -39,13 +39,14 @@ if ($conn->connect_error)
 
     for ($i = 0; $i < count($PeopleCSV); $i++)
     {
-        sscanf($PeopleCSV[$i], "%s", $people);
-        if (empty($people)) {
+        $people = null;
+        if (sscanf($PeopleCSV[$i], "%s", $people) !== 1 || empty($people)) 
+        {
             continue;
         }
-        $text = $text . ", employee " . $people;
+        $text .= ", employee " . $people;
     }
-
+    
     $request = "UPDATE assignments SET resources = '" . $text . "' WHERE id = " . $assignmentID;
     $conn->query($request);
     $conn->close();

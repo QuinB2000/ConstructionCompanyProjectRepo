@@ -34,7 +34,7 @@ if ($conn->connect_error)
         if (empty($truck)) {
             continue;
         }
-        $text = $text . ", truck" . $truck;
+        $text = $text . "truck " . $truck . ",";
     }
 
     for ($i = 0; $i < count($PeopleCSV); $i++)
@@ -44,9 +44,12 @@ if ($conn->connect_error)
         {
             continue;
         }
-        $text .= ", employee " . $people;
+        $text .= "employee " . $people . ",";
     }
     
+    //For materials, updating a job with materials will check the quantity of materials available, subtract the used quantity, and then update the assignment
+
+    $text = rtrim($text, ",");
     $request = "UPDATE assignments SET resources = '" . $text . "' WHERE id = " . $assignmentID;
     $conn->query($request);
     $conn->close();

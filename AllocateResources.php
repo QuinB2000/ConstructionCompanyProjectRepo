@@ -1,63 +1,100 @@
 <?php
-/* The database bootstrap should define $conn as a mysqli connection. */
-if (isset($conn) && $conn instanceof mysqli) {
-    $queries = [
-        'trucks' => 'SELECT truckID AS id, truckName AS name FROM trucks ORDER BY truckID',
-        'employees' => 'SELECT employeeID AS id, employeeName AS name FROM employees ORDER BY employeeID',
-        'materials' => 'SELECT materialID AS id, materialName AS name FROM materials ORDER BY materialID'
-    ];
+    $servername = "localhost";
+    $username = "Quinn";
+    $password = "Quinn123";
+    $dbname = "construction";
 
-    $data = [];
-    foreach ($queries as $type => $query) {
-        $data[$type] = [];
-        $result = $conn->query($query);
-        if ($result) {
-            while ($row = $result->fetch_assoc()) {
-                $data[$type][] = [
-                    'id' => (int) $row['id'],
-                    'name' => (string) $row['name']
-                ];
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) 
+    {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT * FROM assignments WHERE id = " . $_POST['id'];
+    $result = $conn->query($sql);
+
+    $row = $result->fetch_assoc();
+
+    $startTime = $row["start_time"];
+    $endTime = $row["end_time"];    
+
+    $sql = "SELECT resources FROM assignments WHERE (start_time BETWEEN '" . $startTime . "' AND '" . $endTime . "') OR (end_time BETWEEN '" . $startTime . "' AND '" . $endTime . "') or (start_time <= '" . $startTime . "' AND end_time >= '" . $endTime . "')";
+    $result = $conn->query($sql);
+
+
+    $unavailableTrucks = array();
+    $unavailableEmployees = array();
+    $unavailableMaterials = array();
+
+    while ($row = $result->fetch_assoc()) 
+    {
+        $resources = $row["resources"];
+        $csv = explode(",", $resources);
+
+        foreach ($csv as $resource)
+        {
+            $temp = explode(" ", $resource);
+            if ($temp[0] == "truck")
+            {
+                array_push($unavailableTrucks, $temp[1]);
             }
-            $result->free();
+            else if ($temp[0] == "employee")
+            {
+                array_push($unavailableEmployees, $temp[1]);
+            }
+            else if ($temp[0] == "material")
+            {
+                array_push($unavailableMaterials, $temp[1]);
+            }
         }
     }
 
-    $escape = static function ($value) 
+    $availableTrucks = array();
+    $availableEmployees = array();
+    $availableMaterials = array();
+
+    $sql = "SELECT * FROM trucks";
+    $result = $conn->query($sql);
+
+    while ($row = $result->fetch_assoc()) 
     {
-        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-    };
+        if (!in_array($row["id"], $unavailableTrucks))
+        {
+            array_push($availableTrucks, $row["id"]);
+        }
+    }
 
-    $ids = static function ($items) 
+    $sql = "SELECT * FROM employees";
+    $result = $conn->query($sql);
+
+    while ($row = $result->fetch_assoc()) 
     {
-        return implode(' ', array_column($items, 'id'));
-    };
+        if (!in_array($row["id"], $unavailableEmployees))
+        {
+            array_push($availableEmployees, $row["id"]);
+        }
+    }
 
-    $names = static function ($items, $separator) use ($escape) 
+    $sql = "SELECT * FROM materials";
+    $result = $conn->query($sql);
+
+    while ($row = $result->fetch_assoc()) 
     {
-        return implode($separator, array_map(static function ($item) use ($escape) {
-            return $escape($item['name']);
-        }, $items));
-    };
+        if (!in_array($row["id"], $unavailableMaterials))
+        {
+            array_push($availableMaterials, $row["id"]);
+        }
+    }
 
-    $maxID = static function ($items) 
-    {
-        return empty($items) ? 0 : max(array_column($items, 'id')) + 1;
-    };
+    
 
-    echo '<div id="Availabletrucks" hidden>' . $escape($ids($data['trucks'])) . '</div>';
-    echo '<div id="Availableemployees" hidden>' . $escape($ids($data['employees'])) . '</div>';
-    echo '<div id="Availablematerials" hidden>' . $escape($ids($data['materials'])) . '</div>';
-    echo '<div id="AvailableTruckIDs" hidden>' . $maxID($data['trucks']) . ' ' . $maxID($data['employees']) . ' ' . $maxID($data['materials']) . '</div>';
-    echo '<div id="AvailableEmployeeNames" hidden>' . $names($data['employees'], ',') . '</div>';
-    echo '<div id="AvailableMaterialNames" hidden>' . $names($data['materials'], ' ') . '</div>';
-
-    echo '<input type="hidden" id="peopleNum" name="peopleNum" value="' . count($data['employees']) . '">';
-    echo '<input type="hidden" id="materialNum" name="materialNum" value="' . count($data['materials']) . '">';
-    echo '<input type="hidden" id="truckNum" name="truckNum" value="' . count($data['trucks']) . '">';
-}
 ?>
 
-        
+<div id="Availablematerials" hidden><?= htmlspecialchars(implode(' ', $availableMaterials), ENT_QUOTES, 'UTF-8') ?></div>
+<div id="Availableemployees" hidden><?= htmlspecialchars(implode(' ', $availableEmployees), ENT_QUOTES, 'UTF-8') ?></div>
+<div id="Availabletrucks" hidden><?= htmlspecialchars(implode(' ', $availableTrucks), ENT_QUOTES, 'UTF-8') ?></div>
+
 <div id="truckSection">
 </div>
 <div id="peopleSection">
@@ -65,8 +102,6 @@ if (isset($conn) && $conn instanceof mysqli) {
 <div id="materialSection">
 </div>
 
-
-// add something that counts the number of trucks, employees, and materials for use in the javascript as peoplenum, materialnum, and trucknum. This will be used to create the correct number of dropdowns for each resource type.
 
 
 <script>

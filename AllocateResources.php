@@ -54,6 +54,11 @@
     $availableEmployees = array();
     $availableMaterials = array();
 
+    $AvailableTruckIDs = array();
+    $AvailableEmployeeNames = array();
+    $AvailableMaterialNames = array();
+
+
     $sql = "SELECT * FROM trucks";
     $result = $conn->query($sql);
 
@@ -62,6 +67,8 @@
         if (!in_array($row["id"], $unavailableTrucks))
         {
             array_push($availableTrucks, $row["id"]);
+            array_push($AvailableTruckIDs, $row["truck_id"]);
+
         }
     }
 
@@ -73,6 +80,10 @@
         if (!in_array($row["id"], $unavailableEmployees))
         {
             array_push($availableEmployees, $row["id"]);
+
+            $tempName = $row["firstName"] . " " . $row["lastName"];
+
+            array_push($AvailableEmployeeNames, $tempName);
         }
     }
 
@@ -84,6 +95,7 @@
         if (!in_array($row["id"], $unavailableMaterials))
         {
             array_push($availableMaterials, $row["id"]);
+            array_push($AvailableMaterialNames, $row["material"]);
         }
     }
 
@@ -101,6 +113,17 @@
 </div>
 <div id="materialSection">
 </div>
+
+<label for="truckNum">Number of trucks</label>
+<input id="truckNum" type="number" min="0" value="0" oninput="truckQuantityChange()">
+
+<label for="peopleNum">Number of employees</label>
+<input id="peopleNum" type="number" min="0" value="0" oninput="peopleQuantityChange()">
+
+<label for="materialNum">Number of materials</label>
+<input id="materialNum" type="number" min="0" value="0" oninput="materialQuantityChange()">
+
+<button id="submitButton" type="button">Submit</button>
 
 
 

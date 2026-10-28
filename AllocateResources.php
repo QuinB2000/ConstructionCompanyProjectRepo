@@ -27,6 +27,10 @@
     $unavailableEmployees = array();
     $unavailableMaterials = array();
 
+    $maxTruckIDs = 0;
+    $maxEmployeeIDs = 0;
+    $maxMaterialIDs = 0;
+
     while ($row = $result->fetch_assoc()) 
     {
         $resources = $row["resources"];
@@ -68,6 +72,7 @@
         {
             array_push($availableTrucks, $row["id"]);
             array_push($AvailableTruckIDs, $row["truck_id"]);
+            $maxTruckIDs += 1;
 
         }
     }
@@ -84,6 +89,7 @@
             $tempName = $row["firstName"] . " " . $row["lastName"];
 
             array_push($AvailableEmployeeNames, $tempName);
+            $maxEmployeeIDs += 1;
         }
     }
 
@@ -96,23 +102,22 @@
         {
             array_push($availableMaterials, $row["id"]);
             array_push($AvailableMaterialNames, $row["material"]);
+            $maxMaterialIDs += 1;
         }
     }
 
-    
+    echo "<div id='maxIDs' hidden>" . $maxTruckIDs . " " . $maxEmployeeIDs . " " . $maxMaterialIDs . "</div>";
 
 ?>
+
+<div id="AvailableTruckIDs" hidden><?= htmlspecialchars(implode(' ', $AvailableTruckIDs), ENT_QUOTES, 'UTF-8') ?></div>
+<div id="AvailableEmployeeNames" hidden><?= htmlspecialchars(implode(',', $AvailableEmployeeNames), ENT_QUOTES, 'UTF-8') ?></div>
+<div id="AvailableMaterialNames" hidden><?= htmlspecialchars(implode(' ', $AvailableMaterialNames), ENT_QUOTES, 'UTF-8') ?></div>
+
 
 <div id="Availablematerials" hidden><?= htmlspecialchars(implode(' ', $availableMaterials), ENT_QUOTES, 'UTF-8') ?></div>
 <div id="Availableemployees" hidden><?= htmlspecialchars(implode(' ', $availableEmployees), ENT_QUOTES, 'UTF-8') ?></div>
 <div id="Availabletrucks" hidden><?= htmlspecialchars(implode(' ', $availableTrucks), ENT_QUOTES, 'UTF-8') ?></div>
-
-<div id="truckSection">
-</div>
-<div id="peopleSection">
-</div>
-<div id="materialSection">
-</div>
 
 <label for="truckNum">Number of trucks</label>
 <input id="truckNum" type="number" min="0" value="0" oninput="truckQuantityChange()">
@@ -122,6 +127,14 @@
 
 <label for="materialNum">Number of materials</label>
 <input id="materialNum" type="number" min="0" value="0" oninput="materialQuantityChange()">
+
+<div id="truckSection">
+</div>
+<div id="peopleSection">
+</div>
+<div id="materialSection">
+</div>
+
 
 <button id="submitButton" type="button">Submit</button>
 
@@ -191,7 +204,7 @@
     const unselectedMaterials = materialText.trim().split(" ");
     
     //Max Ids contains the highest ID number of trucks, employees, and materials at positions 0, 1, and 2 respectively
-    var maxIDInfo = document.getElementById("AvailableTruckIDs").innerHTML;
+    var maxIDInfo = document.getElementById("maxIDs").innerHTML;
     const maxIDs = maxIDInfo.trim().split(" ");
 
     var truckIDText = document.getElementById("AvailableTruckIDs").innerHTML;
@@ -360,7 +373,7 @@ function truckQuantityChange() {
 
     function populateEmployeeOptions(index)
     {
-        var id = "employee" + index;
+        var id = "people" + index;
         var selectBox = document.getElementById(id);
 
         while (selectBox.options.length > 1)
@@ -406,7 +419,7 @@ function truckQuantityChange() {
 
     function employeeChange(index)
     {
-        var id = "employee" + index;
+        var id = "people" + index;
         var selectedEmployee = document.getElementById(id).value;
 
         if (selectedEmployees.at(index) > 0)

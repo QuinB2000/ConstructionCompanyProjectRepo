@@ -49,6 +49,30 @@ if ($conn->connect_error)
     
     //For materials, updating a job with materials will check the quantity of materials available, subtract the used quantity, and then update the assignment
 
+    for($i = 0; $i < count($MaterialCSV); $i++)
+    {
+        $material = null;
+        $quantity = null;
+        if (sscanf($MaterialCSV[$i], "%s %s", $material, $quantity) !== 2 || empty($material) || empty($quantity)) 
+        {
+            continue;
+        }
+
+        $request = "SELECT quantity FROM materials WHERE id = '" . $material . "'";
+        $result = $conn->query($request);
+        $availableQuantity = $result->fetch_assoc()["quantity"];
+        $newQuantity = $availableQuantity - $quantity;
+        if ($newQuantity > 0) {
+            $request = "UPDATE materials SET quantity = " . $newQuantity . " WHERE id = '" . $material . "'";
+            $conn->query($request);
+            $text .= "material " . $material . ",";
+            //Text in assignment should reflect the materials allocated here. Come up with scheme to track how many materials are allocated to a given assignment
+        }
+        else {
+            // Handle the case where there is not enough quantity available
+        }
+    }
+
     $text = rtrim($text, ",");
     $request = "UPDATE assignments SET resources = '" . $text . "' WHERE id = " . $assignmentID;
     $conn->query($request);

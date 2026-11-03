@@ -175,7 +175,7 @@
             var tempQuantity = "quantity" + i;
             if (!isEmptyString(document.getElementById(tempMaterial).value) && !isEmptyString(document.getElementById(tempQuantity).value))
             {
-                materialText += document.getElementById(tempMaterial).value + "," + document.getElementById(tempQuantity).value + " ";
+                materialText += document.getElementById(tempMaterial).value + " " + document.getElementById(tempQuantity).value + ",";
             }
         }
 

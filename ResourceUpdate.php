@@ -58,15 +58,29 @@ if ($conn->connect_error)
             continue;
         }
 
-        $request = "SELECT quantity FROM materials WHERE id = '" . $material . "'";
+        $request = "SELECT * FROM materials WHERE id = '" . $material . "'";
         $result = $conn->query($request);
-        $availableQuantity = $result->fetch_assoc()["quantity"];
+        $row = $result->fetch_assoc();
+        $type = $row["material"];
+        $availableQuantity = $row["quantity"];
+        $units = $row["units"];
         $newQuantity = $availableQuantity - $quantity;
         if ($newQuantity > 0) {
             $request = "UPDATE materials SET quantity = " . $newQuantity . " WHERE id = '" . $material . "'";
             $conn->query($request);
             $text .= "material " . $material . ",";
             //Text in assignment should reflect the materials allocated here. Come up with scheme to track how many materials are allocated to a given assignment
+            $request = "SELECT * FROM materials_assignment_specific where id = " . $assignmentID . " AND material = " . $type . " AND units = '" . $units . "'";
+            $result = $conn->query($request);
+            $row = $result->fetch_assoc();
+            if ($row) {
+                $existingQuantity = $row["quantity"];
+                $request = "UPDATE materials_assignment_specific SET quantity = " . ($existingQuantity + $quantity) . " WHERE id = " . $assignmentID . " AND material = " . $type . " AND units = '" . $units . "'";
+                $conn->query($request);
+            } else {
+                $request = "INSERT INTO materials_assignment_specific (id, material, quantity, units) VALUES (" . $assignmentID . ", " . $type . ", " . $quantity . ", '" . $units . "')";
+                $conn->query($request);
+            }
         }
         else {
             // Handle the case where there is not enough quantity available

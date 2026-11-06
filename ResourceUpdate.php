@@ -11,9 +11,7 @@ $TrucksCSV = str_getcsv($truckText, separator: ' ');
 $PeopleCSV = str_getcsv($peopleText, separator: ' ');
 $MaterialCSV = str_getcsv($materialText, separator: ',');
 
-echo "Trucks: " . $truckText . "<br>";
-echo "People: " . $peopleText . "<br>";
-echo "Materials: " . $materialText . "<br>";
+
 
 
 $servername = "127.0.0.1";
@@ -32,6 +30,7 @@ if ($conn->connect_error)
     $result = $conn->query($request);
 
     $text = $result->fetch_assoc()["resources"];
+    $text = $text . ",";
 
     for ($i = 0; $i < count($TrucksCSV); $i++)
     {
@@ -75,15 +74,16 @@ if ($conn->connect_error)
             $conn->query($request);
             $text .= "material " . $material . ",";
             //Text in assignment should reflect the materials allocated here. Come up with scheme to track how many materials are allocated to a given assignment
-            $request = "SELECT * FROM materials_assignment_specific where id = " . $assignmentID . " AND material = " . $type . " AND units = '" . $units . "'";
+            
+            $request = "SELECT * FROM materials_assignment_specific where id = " . $assignmentID . " AND material = '" . $type . "' AND units = '" . $units . "'";
             $result = $conn->query($request);
             $row = $result->fetch_assoc();
             if ($row) {
                 $existingQuantity = $row["quantity"];
-                $request = "UPDATE materials_assignment_specific SET quantity = " . ($existingQuantity + $quantity) . " WHERE id = " . $assignmentID . " AND material = " . $type . " AND units = '" . $units . "'";
+                $request = "UPDATE materials_assignment_specific SET quantity = " . ($existingQuantity + $quantity) . " WHERE id = " . $assignmentID . " AND material = '" . $type . "' AND units = '" . $units . "'";
                 $conn->query($request);
             } else {
-                $request = "INSERT INTO materials_assignment_specific (id, material, quantity, units) VALUES (" . $assignmentID . ", " . $type . ", " . $quantity . ", '" . $units . "')";
+                $request = "INSERT INTO materials_assignment_specific (id, material, quantity, units) VALUES (" . $assignmentID . ", '" . $type . "', " . $quantity . ", '" . $units . "')";
                 $conn->query($request);
             }
         }
@@ -97,6 +97,6 @@ if ($conn->connect_error)
     $conn->query($request);
     $conn->close();
 
-    //header("Location: AssignmentList.php");
+    header("Location: AssignmentList.php");
 
 ?>

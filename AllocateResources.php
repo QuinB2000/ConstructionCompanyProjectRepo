@@ -137,7 +137,7 @@
 </div>
 
 
-<form action="ResourceUpdate.php" method="post">
+<form id="resourceForm" action="ResourceUpdate.php" method="post">
     <input type="hidden" name="assignmentID" value="<?=$_POST['id']?>">
     <input type="hidden" name="TrucksCSV" id="TrucksCSV">
     <input type="hidden" name="PeopleCSV" id="PeopleCSV">
@@ -147,12 +147,12 @@
 
 
 <script>
+
     const isEmptyString = (str) => typeof str === 'string' && str.trim().length === 0;
-    const submitButton = document.getElementById("submitButton");
+    const resourceForm = document.getElementById("resourceForm");
     
-    submitButton.addEventListener("submit", function()
+    resourceForm.addEventListener("submit", function()
     {
-        event.preventDefault();
         var peoplenum = document.getElementById("peopleNum").value;
         var materialnum = document.getElementById("materialNum").value;
         var trucknum = document.getElementById("truckNum").value;

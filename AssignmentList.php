@@ -37,17 +37,9 @@
                             echo $employee_row["firstName"] . " " . $employee_row["lastName"] . "<br>";
                         }
                     }
-                    else if ($temp[0] == "material")
-                    {
-                        $sql = "SELECT material, units, quantity FROM materials_assignment_specific WHERE id = " . $row['id'];
-                        $material_result = $conn->query($sql);
-                        if ($material_result->num_rows > 0) {
-                            $material_row = $material_result->fetch_assoc();
-                            echo $material_row["quantity"] . " " . $material_row["units"] . " of " . $material_row["material"] . "<br>";
-                        }
-                    }
                     else if ($temp[0] == "truck")
                     {
+                        
                         $sql = "SELECT truck_id FROM trucks WHERE id = " . $temp[1];
                         $truck_result = $conn->query($sql);
                         if ($truck_result->num_rows > 0) {
@@ -56,6 +48,15 @@
                         }
                     }
                 }
+
+                 $sql = "SELECT material, units, quantity FROM materials_assignment_specific WHERE id = " . $row['id'];
+                $material_result = $conn->query($sql);
+                while ($material_row = $material_result->fetch_assoc())
+                {
+                    echo $material_row["quantity"] . " " . $material_row["units"] . " of " . $material_row["material"] . "<br>";
+                }
+
+
                 echo "<form action='AllocateResources.php' method='post'>";
                 echo "<input type='hidden' name='id' value='" . $row['id'] . "'>";
                 echo "<input type='submit' value='Allocate Resources'>";

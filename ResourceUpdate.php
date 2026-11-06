@@ -1,9 +1,9 @@
 <?php
 
 // Retrieve POST data
-$truckText = isset($_POST["truckText"]) ? $_POST["truckText"] : "";
-$peopleText = isset($_POST["peopleText"]) ? $_POST["peopleText"] : "";
-$materialText = isset($_POST["materialText"]) ? $_POST["materialText"] : "";
+$truckText = isset($_POST["TrucksCSV"]) ? $_POST["TrucksCSV"] : "";
+$peopleText = isset($_POST["PeopleCSV"]) ? $_POST["PeopleCSV"] : "";
+$materialText = isset($_POST["MaterialCSV"]) ? $_POST["MaterialCSV"] : "";
 
 $assignmentID = $_POST["assignmentID"];
 
@@ -11,9 +11,14 @@ $TrucksCSV = str_getcsv($truckText, separator: ' ');
 $PeopleCSV = str_getcsv($peopleText, separator: ' ');
 $MaterialCSV = str_getcsv($materialText, separator: ',');
 
-$servername = "localhost";
-$username = "Quinn";
-$password = "Quinn123";
+echo "Trucks: " . $truckText . "<br>";
+echo "People: " . $peopleText . "<br>";
+echo "Materials: " . $materialText . "<br>";
+
+
+$servername = "127.0.0.1";
+$username = "root";
+$password = "";
 $dbname = "construction";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -91,5 +96,7 @@ if ($conn->connect_error)
     $request = "UPDATE assignments SET resources = '" . $text . "' WHERE id = " . $assignmentID;
     $conn->query($request);
     $conn->close();
+
+    //header("Location: AssignmentList.php");
 
 ?>

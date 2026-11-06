@@ -1,7 +1,7 @@
 <?php
-    $servername = "localhost";
-    $username = "Quinn";
-    $password = "Quinn123";
+    $servername = "127.0.0.1";
+    $username = "root";
+    $password = "";
     $dbname = "construction";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -101,7 +101,8 @@
         if (!in_array($row["id"], $unavailableMaterials))
         {
             array_push($availableMaterials, $row["id"]);
-            array_push($AvailableMaterialNames, $row["material"]);
+            $tempName = $row["material"] . "(" . $row["units"] . ")";
+            array_push($AvailableMaterialNames, $tempName);
             $maxMaterialIDs += 1;
         }
     }
@@ -136,15 +137,22 @@
 </div>
 
 
-<button id="submitButton" type="button">Submit</button>
-
+<form action="ResourceUpdate.php" method="post">
+    <input type="hidden" name="assignmentID" value="<?=$_POST['id']?>">
+    <input type="hidden" name="TrucksCSV" id="TrucksCSV">
+    <input type="hidden" name="PeopleCSV" id="PeopleCSV">
+    <input type="hidden" name="MaterialCSV" id="MaterialCSV">
+    <input type="submit" id="submitButton" value="Submit">
+</form>
 
 
 <script>
     const isEmptyString = (str) => typeof str === 'string' && str.trim().length === 0;
     const submitButton = document.getElementById("submitButton");
-    submitButton.addEventListener("click", function()
+    
+    submitButton.addEventListener("submit", function()
     {
+        event.preventDefault();
         var peoplenum = document.getElementById("peopleNum").value;
         var materialnum = document.getElementById("materialNum").value;
         var trucknum = document.getElementById("truckNum").value;
@@ -178,6 +186,11 @@
                 materialText += document.getElementById(tempMaterial).value + " " + document.getElementById(tempQuantity).value + ",";
             }
         }
+
+        document.getElementById("TrucksCSV").value = truckText.trim();
+        document.getElementById("PeopleCSV").value = peopleText.trim();
+        document.getElementById("MaterialCSV").value = materialText.trim();
+        
 
         console.log("Trucks: " + truckText);
         console.log("People: " + peopleText);

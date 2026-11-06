@@ -4,9 +4,9 @@ $unit = $_POST["UnitType"];
 $quantity = $_POST["Amount"];
 $material = $_POST["material"];
 
-$servername = "localhost";
-$username = "Quinn";
-$password = "Quinn123";
+$servername = "127.0.0.1";
+$username = "root";
+$password = "";
 $dbname = "construction";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

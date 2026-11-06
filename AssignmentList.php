@@ -1,7 +1,7 @@
 <?php
-    $servername = "localhost";
-    $username = "Quinn";
-    $password = "Quinn123";
+    $servername = "127.0.0.1";
+    $username = "root";
+    $password = "";
     $dbname = "construction";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -39,7 +39,7 @@
                     }
                     else if ($temp[0] == "material")
                     {
-                        $sql = "SELECT material, units, quantity FROM materials WHERE id = " . $temp[1];
+                        $sql = "SELECT material, units, quantity FROM materials_assignment_specific WHERE id = " . $row['id'];
                         $material_result = $conn->query($sql);
                         if ($material_result->num_rows > 0) {
                             $material_row = $material_result->fetch_assoc();

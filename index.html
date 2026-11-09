@@ -91,6 +91,22 @@
     <button commandfor="MaterialDialog" command="close">Close</button>
     </dialog>
 
+    <button command="show-modal" commandfor="AssignmentDialog">Add Assignment</button>
+    <dialog id="AssignmentDialog">
+        <form action="AssignmentEntry.php" method="post">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date"><br>
+            <label for="job_id">Job ID:</label>
+            <input type="number" id="job_id" name="job_id"><br>
+            <label for="start_time">Start Time:</label>
+            <input type="time" id="start_time" name="start_time"><br>
+            <label for="end_time">End Time:</label>
+            <input type="time" id="end_time" name="end_time"><br>
+            <input type="submit" value="Submit">
+        </form>
+        <button command="close" commandfor="AssignmentDialog">Close</button>
+    </dialog>
+
 
 </body>
 </html>

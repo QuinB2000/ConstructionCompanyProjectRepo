@@ -2,6 +2,7 @@
     $truckID = $_POST["truckID"];
     $truckCapacity = $_POST["truckCapacity"];
     $licenseNum = $_POST["LicenseNum"];
+    $source = $_POST["source"];
 
     $servername = "127.0.0.1";
     $username = "root";
@@ -20,6 +21,13 @@
     $conn->query($request);
 
     $conn->close();
-    header("Location: index.html");
+    if ($source === "index.html") {
+        header("Location: index.html");
+    } else if ($source === "ListEntries.php") {
+        header("Location: ListEntries.php");
+    } else {
+        // Default redirection if source is not recognized
+        header("Location: index.html");
+    }
     exit();
 ?>
